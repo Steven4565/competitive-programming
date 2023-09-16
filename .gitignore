@@ -33,5 +33,5 @@
 *.out
 *.app
 *.bin
-**/.vscode/
-**/.cph/
+*/.vscode/*
+*/.cph/*
