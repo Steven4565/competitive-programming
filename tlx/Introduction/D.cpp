@@ -11,34 +11,32 @@ int main() {
   string a, b;
   cin >> a >> b;
 
+  int aLen = a.size();
+  int bLen = b.size();
+
+  if (abs(aLen - bLen) != 1) {
+    wrong();
+    return 0;
+  }
+
   int i = 0, j = 0;
-  int diffIdx;
-  bool skipped = false;
-  bool valid = true;
   while (true) {
     if (a[i] != b[j]) {
-      if (!skipped)
-        skipped = true;
-      else {
-        valid = false;
-      }
-
-      if (a.size() > b.size()) {
-        i++;
+      if (aLen > bLen) {
+        a.erase(i, 1);
       } else {
-        j++;
+        b.erase(i, 1);
       }
-    } else {
-      j++;
-      i++;
+      break;
     }
+    i++;
+    j++;
   }
-  // cout << diffIdxEnd << endl << diffIdxStart << endl;
-  if (valid && skipped) {
+
+  if (a == b)
     correct();
-  } else {
+  else
     wrong();
-  }
 
   return 0;
 }
