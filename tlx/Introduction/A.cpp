@@ -1,8 +1,12 @@
-#include <bits/stdc++.h>
+#include <algorithm>
+#include <iostream>
+#include <string>
+#include <vector>
+
 using namespace std;
 
 class Score {
- public:
+public:
   string id;
   int score1, score2, score3;
 
