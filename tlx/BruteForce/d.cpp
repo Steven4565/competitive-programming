@@ -18,6 +18,7 @@ bool calculateDance(vector<struct move> &moves, int threshold) {
   bool meyakinkan = false;
   for (int i = 0; i < moves.size(); i++) {
     int base = moves[i].base;
+    // cout << "base prev " << base << endl;
     if (i >= 0) {
       if (moves[i - 1].type == 'P')
         base *= 2;
@@ -29,7 +30,7 @@ bool calculateDance(vector<struct move> &moves, int threshold) {
       base += y;
     if (moves[i].type == 'Y')
       meyakinkan = true;
-
+    // cout << "base after" << base << endl;
     scoreCount += base;
   }
   // cout << scoreCount << endl;
@@ -39,11 +40,7 @@ bool calculateDance(vector<struct move> &moves, int threshold) {
 int permute(vector<struct move> &moves, int r, int standard, int used,
             vector<struct move> &currentMoves, int currentN) {
   if (currentN > r) {
-    // for (int i = 0; i < r; i++) {
-    //   printMove(currentMoves[i]);
-    // }
     return calculateDance(currentMoves, standard);
-    // cout << endl;
   }
   int count = 0;
   for (int i = 0; i < moves.size(); i++) {
@@ -76,6 +73,8 @@ int main() {
     int res = permute(moves, r, threshold, 0, current, 1);
     cout << res << endl;
   }
+
+  // calculateDance(moves, 62);
 
   return 0;
 }
