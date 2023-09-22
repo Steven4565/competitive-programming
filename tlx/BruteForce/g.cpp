@@ -23,22 +23,6 @@ void fillVisited(vector<vector<int>> &visited, int r, int c, int ballCount) {
   fillVisited(visited, r, c - 1, ballCount);
 }
 
-void removeMatrix(vector<vector<int>> &matrix, vector<vector<int>> &visited,
-                  int r, int c, int target) {
-  if (r < 0 || r >= R || c < 0 || c >= C) return;
-  if (visited[r][c]) return;
-  if (matrix[r][c] != target) return;
-  if (matrix[r][c] == target) {
-    matrix[r][c] = -1;
-    visited[r][c] = ballCount;
-  }
-
-  removeMatrix(matrix, visited, r + 1, c, target);
-  removeMatrix(matrix, visited, r - 1, c, target);
-  removeMatrix(matrix, visited, r, c + 1, target);
-  removeMatrix(matrix, visited, r, c - 1, target);
-}
-
 int floodFill(vector<vector<int>> &matrix, vector<vector<int>> &visited, int r,
               int c, int target, bool removeCell) {
   if (r < 0 || r >= R || c < 0 || c >= C) return 0;
@@ -114,9 +98,10 @@ int main() {
       // collapses the matrix
       collapse(matrixCopy);
 
-      // cout << "copy" << endl;
-      // printMatrix(matrixCopy);
-      // cout << endl;
+      cout << "copy" << endl;
+      printMatrix(matrixCopy);
+      cout << ballCount << endl;
+      cout << endl;
 
       maxBallCount2 = 0;
 
@@ -131,10 +116,13 @@ int main() {
               floodFill(matrixCopy, visited2, l, m, matrixCopy[l][m], false);
           if (ballCount2 > maxBallCount2) maxBallCount2 = ballCount2;
         }
+        int score = ballCount * (ballCount - 1);
+        if (maxBallCount2 > 0) {
+          score += maxBallCount2 * (maxBallCount2 - 1);
+        }
+        if (score > maxScore) maxScore = score;
+        // cout << ballCount << " " << maxBallCount2 << endl;
       }
-      int score =
-          ballCount * (ballCount - 1) + maxBallCount2 * (maxBallCount2 - 1);
-      if (score > maxScore) maxScore = score;
     }
   }
 
