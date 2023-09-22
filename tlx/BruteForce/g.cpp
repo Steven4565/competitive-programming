@@ -29,23 +29,27 @@ void remove(vector<vector<int>> &visited, int r, int c, int target) {
   remove(visited, r, c - 1, target);
 }
 
-void floodFill(vector<vector<bool>> &visited, int r, int c, int target) {
+int floodFill(vector<vector<int>> &visited, int r, int c, int target) {
   if (r < 0 || r >= R || c < 0 || c >= C)
-    return;
-  if (visited[r][c])
-    return;
+    return 0;
+  if (visited[r][c] != 0)
+    return 0;
   if (matrix[r][c] != target)
-    return;
-  // cout << visited[c][r] << endl;
+    return 0;
   if (matrix[r][c] == target) {
-    ballCount++;
-    visited[r][c] = true;
+    visited[r][c] = -1;
   }
 
-  floodFill(visited, r + 1, c, target);
-  floodFill(visited, r - 1, c, target);
-  floodFill(visited, r, c + 1, target);
-  floodFill(visited, r, c - 1, target);
+  int count = 0;
+
+  count += floodFill(visited, r + 1, c, target);
+  count += floodFill(visited, r - 1, c, target);
+  count += floodFill(visited, r, c + 1, target);
+  count += floodFill(visited, r, c - 1, target);
+
+  visited[r][c] = count;
+  matrix[r][c] = -1;
+  return count;
 }
 
 void swap(int &a, int &b) {
@@ -85,10 +89,8 @@ int main() {
 
   for (int i = 0; i < R; i++) {
     for (int j = 0; j < C; j++) {
-      vector<vector<bool>> visited(30, vector<bool>(30, false));
-
-      ballCount = 0;
-      floodFill(visited, i, j, matrix[i][j]);
+      ballCount = floodFill(visited, i, j, matrix[i][j]);
+      cout << "ball count " << ballCount << endl;
       if (ballCount > maxBallCount) {
         maxBallCount = ballCount;
         maxI = i;
@@ -98,7 +100,7 @@ int main() {
   }
 
   vector<vector<bool>> visited(30, vector<bool>(30, false));
-  remove(visited, maxI, maxJ, matrix[maxI][maxJ]);
+  // remove(visited, maxI, maxJ, matrix[maxI][maxJ]);
   collapse();
 
   for (int i = 0; i < R; i++) {
