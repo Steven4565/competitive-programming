@@ -25,6 +25,33 @@ void fillVisited(vector<vector<int>> &visited, int r, int c, int ballCount) {
   fillVisited(visited, r, c - 1, ballCount);
 }
 
+bool isValidNode(int r, int c) {
+  if (r < 0 || r >= R || c < 0 || c >= C)
+    return false;
+  return true;
+}
+
+bool isSingle(vector<vector<int>> &matrix, int r, int c) {
+  int target = matrix[r][c];
+  if (target == 1) {
+    // cout << isValidNode(r + 1, c) << endl;
+    // cout << isValidNode(r - 1, c) << endl;
+    // cout << isValidNode(r, c + 1) << endl;
+    // cout << isValidNode(r, c - 1) << endl;
+    // cout << target << endl;
+    // cout << matrix[r + 1][c] << endl;
+    // cout << matrix[r - 1][c] << endl;
+    // cout << matrix[r][c + 1] << endl;
+    // cout << matrix[r][c - 1] << endl;
+  }
+  if ((!isValidNode(r + 1, c) || matrix[r + 1][c] != target) &&
+      (!isValidNode(r - 1, c) || matrix[r - 1][c] != target) &&
+      (!isValidNode(r, c + 1) || matrix[r][c + 1] != target) &&
+      (!isValidNode(r, c - 1) || matrix[r][c - 1] != target))
+    return true;
+  return false;
+}
+
 int floodFill(vector<vector<int>> &matrix, vector<vector<int>> &visited, int r,
               int c, int target, bool removeCell) {
   if (r < 0 || r >= R || c < 0 || c >= C)
@@ -97,6 +124,8 @@ int main() {
     for (int j = 0; j < C; j++) {
       if (visited[i][j])
         continue;
+      if (isSingle(matrix, i, j))
+        continue;
       vector<vector<int>> matrixCopy = matrix;
 
       // sets the targets to -1, sets visited to -1
@@ -118,6 +147,7 @@ int main() {
         for (int m = 0; m < C; m++) {
           if (matrixCopy[l][m] == -1)
             continue;
+          // if (isSingle(matrixCopy, l, m)) continue;
 
           // need a new visited map because it has been collapsed
           vector<vector<int>> visited2(30, vector<int>(30, 0));
