@@ -13,8 +13,10 @@ int maxBallCount = 0;
 int maxI, maxJ;
 
 void fillVisited(vector<vector<int>> &visited, int r, int c, int ballCount) {
-  if (r < 0 || r >= R || c < 0 || c >= C) return;
-  if (visited[r][c] != -1) return;
+  if (r < 0 || r >= R || c < 0 || c >= C)
+    return;
+  if (visited[r][c] != -1)
+    return;
   visited[r][c] = ballCount;
 
   fillVisited(visited, r + 1, c, ballCount);
@@ -25,11 +27,15 @@ void fillVisited(vector<vector<int>> &visited, int r, int c, int ballCount) {
 
 int floodFill(vector<vector<int>> &matrix, vector<vector<int>> &visited, int r,
               int c, int target, bool removeCell) {
-  if (r < 0 || r >= R || c < 0 || c >= C) return 0;
-  if (visited[r][c] != 0) return 0;
-  if (matrix[r][c] != target) return 0;
+  if (r < 0 || r >= R || c < 0 || c >= C)
+    return 0;
+  if (visited[r][c] != 0)
+    return 0;
+  if (matrix[r][c] != target)
+    return 0;
 
-  if (removeCell) matrix[r][c] = -1;
+  if (removeCell)
+    matrix[r][c] = -1;
   visited[r][c] = -1;
 
   int count = 1;
@@ -65,7 +71,8 @@ void collapse(vector<vector<int>> &matrix) {
     int lastEmpty = -1;
     for (int i = R - 1; i >= 0; i--) {
       if (matrix[i][j] == -1) {
-        if (lastEmpty == -1) lastEmpty = i;
+        if (lastEmpty == -1)
+          lastEmpty = i;
       } else if (lastEmpty != -1) {
         swap(matrix[i][j], matrix[lastEmpty][j]);
         i = lastEmpty;
@@ -88,7 +95,8 @@ int main() {
 
   for (int i = 0; i < R; i++) {
     for (int j = 0; j < C; j++) {
-      if (visited[i][j]) continue;
+      if (visited[i][j])
+        continue;
       vector<vector<int>> matrixCopy = matrix;
 
       // sets the targets to -1, sets visited to -1
@@ -98,29 +106,32 @@ int main() {
       // collapses the matrix
       collapse(matrixCopy);
 
-      cout << "copy" << endl;
-      printMatrix(matrixCopy);
-      cout << ballCount << endl;
-      cout << endl;
+      // cout << "copy" << endl;
+      // printMatrix(matrixCopy);
+      // cout << ballCount << endl;
+      // cout << endl;
 
       maxBallCount2 = 0;
 
       // do another loop through the entire matrix.
       for (int l = 0; l < R; l++) {
         for (int m = 0; m < C; m++) {
-          if (matrixCopy[l][m] == -1) continue;
+          if (matrixCopy[l][m] == -1)
+            continue;
 
           // need a new visited map because it has been collapsed
           vector<vector<int>> visited2(30, vector<int>(30, 0));
           int ballCount2 =
               floodFill(matrixCopy, visited2, l, m, matrixCopy[l][m], false);
-          if (ballCount2 > maxBallCount2) maxBallCount2 = ballCount2;
+          if (ballCount2 > maxBallCount2)
+            maxBallCount2 = ballCount2;
         }
         int score = ballCount * (ballCount - 1);
         if (maxBallCount2 > 0) {
           score += maxBallCount2 * (maxBallCount2 - 1);
         }
-        if (score > maxScore) maxScore = score;
+        if (score > maxScore)
+          maxScore = score;
         // cout << ballCount << " " << maxBallCount2 << endl;
       }
     }
