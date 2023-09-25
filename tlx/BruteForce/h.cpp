@@ -9,20 +9,55 @@ int n;
 int arr[11000];
 vector<int> bucketCountArr;
 int target;
-int nBucket;
+int biggerBucketCount;
+int bucketSize;
+bool found = false;
 
-void recur(int depth = 0, int bucketCount = 0) {
-  if (depth == n - 1) {
-    for (int i = 0; i < bucketCountArr.size(); i++) {
-      cout << bucketCountArr[i] << " ";
-    }
-    cout << endl;
+bool checkValidComb(bool print = false) {
+  int bucketI = 0;
+  int currBucket = 0;
+  int i = 0;
+
+  // for (int el : bucketCountArr) cout << el << " ";
+  // cout << endl;
+
+  while (currBucket < target) {
+    int incSize = bucketSize;
+    while (bucketI < bucketCountArr.size() &&
+           bucketCountArr[bucketI] < currBucket)
+      bucketI++;
+    if (bucketI < bucketCountArr.size() &&
+        bucketCountArr[bucketI] == currBucket)
+      incSize++;
+    i += incSize;
+    if (i >= n) break;
+    // cout << "incsize: " << incSize << " i: " << i << " curr: " << currBucket
+    //      << endl;
+
+    int upperLimit = arr[i];
+    // cout << "upper " << upperLimit << endl;
+    if (print) {
+      cout << upperLimit << " ";
+    } else if (arr[i - 1] >= upperLimit)
+      //  (i + 1 < n && arr[i + 1] == upperLimit))
+      return false;
+    currBucket++;
+  }
+  return true;
+}
+
+void recur(int depth = 0) {
+  if (found) return;
+  if (bucketCountArr.size() == biggerBucketCount) {
+    if (!checkValidComb()) return;
+    checkValidComb(true);
+    found = true;
     return;
   }
 
-  for (int i = 0; i < n - (nBucket - bucketCount); i++) {
-    bucketCountArr.push_back(nBucket);
-    recur(depth + 1, bucketCount + 1);
+  for (int i = depth; i < target; i++) {
+    bucketCountArr.push_back(i);
+    recur(i + 1);
     bucketCountArr.pop_back();
   }
 }
@@ -36,13 +71,14 @@ int main() {
 
   sort(arr, arr + n);
 
-  for (int i = 0; i < n; i++) {
-    cout << arr[i] << " ";
-  }
-  cout << endl << endl;
+  // for (int i = 0; i < n; i++) {
+  //   cout << arr[i] << " ";
+  // }
+  // cout << endl << endl;
 
-  nBucket = ceil(n / target);
-  recur(0, 0);
+  bucketSize = floor(n / target);
+  biggerBucketCount = n - (bucketSize * target);
+  recur(0);
 
   return 0;
 }
