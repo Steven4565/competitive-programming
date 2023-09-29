@@ -27,70 +27,75 @@ int main() {
   //   cout << prices[i].first << " " << prices[i].second << endl;
   // }
 
-  // get max number of plates you can buy
+  // Get max number of plates you can buy
   ll leastPrice = prices[0].second;
   counts[prices[0].first] = m / leastPrice;
-  int maxPlates = m / leastPrice;
-  // cout << "max " << maxPlates << endl;
+  ll maxPlates = m / leastPrice;
 
-  ll count = m / leastPrice;
   ll remainder = m % leastPrice;
   // cout << "rem " << remainder << endl;
   for (int i = n - 1; i >= 0 && remainder > 0 && maxPlates > 0; i--) {
+    // If the previous plate in the sorted array has the same price, then skip.
+    // Because it has a lower number.
     if (i - 1 >= 0 && prices[i - 1].second == prices[i].second)
       continue;
 
     ll diff = prices[i].second - leastPrice;
     // cout << "diff " << diff << endl;
+
+    // Ran out of plates to swap
+    if (counts[prices[0].first] <= 0)
+      break;
+
+    // If it can swap, then swap for the higher plate
     if (diff != 0 && diff <= remainder && remainder != 0) {
       ll bought = remainder / diff;
       remainder %= diff;
       // cout << "bought " << bought << " " << prices[i].first << endl;
       counts[prices[i].first] += bought;
-      counts[prices[0].first] -= bought;
+      counts[prices[0].first] -= bought; // FIXME: might break if bought more
+                                         // upgrades than the current plates.
     }
   }
 
-  // total bought
-  if (count == 0) {
-    cout << count << endl;
+  // Edge case, when nothing is bought
+  if (maxPlates == 0) {
+    cout << maxPlates << endl;
     return 0;
-  } else if (count == counts[0])
+  } else if (maxPlates == counts[0])
     cout << 1 << endl;
   else
-    cout << count << endl;
+    cout << maxPlates << endl;
 
-  // first 50 digits of max comb
-  vector<ll> countsCopy = counts;
-  if (countsCopy[0] == count) {
-    cout << 0;
+  vector<char> startNum, endNum;
+
+  if (counts[0] == maxPlates) {
+    cout << 0 << endl << 0 << endl;
+    return 0;
   } else {
-    int j = n - 1;
-    for (int i = maxPlates; i >= 0 && j >= 0; i--) {
-      if (countsCopy[j] > 0) {
-        if (maxPlates - i < 50)
-          cout << j;
-        countsCopy[j]--;
+    int plateNum = n - 1;
+    for (int i = maxPlates; i >= 0 && plateNum >= 0; i--) {
+      if (counts[plateNum] > 0) {
+        if (startNum.size() < 50) {
+          startNum.push_back('0' + plateNum);
+          // cout << "num" << plateNum << endl;
+        }
+        if (i <= 50)
+          endNum.push_back('0' + plateNum);
+        counts[plateNum]--;
+      }
+      while (counts[plateNum] == 0) {
+        plateNum--;
       }
     }
-    cout << endl;
   }
-
-  // last 50 digits of max comb
-  countsCopy = counts;
-  if (countsCopy[0] == count) {
-    cout << 0;
-  } else {
-    int j = n - 1;
-    for (int i = maxPlates; i >= 0 && j >= 0; i--) {
-      if (countsCopy[j] > 0) {
-        if (i < 49)
-          cout << j;
-        countsCopy[j]--;
-      }
-      if (countsCopy[j] == 0)
-        j--;
-    }
+  // cout << "Size " << startNum.size() << endl;
+  for (int i = 0; i < startNum.size(); i++) {
+    cout << startNum[i];
+  }
+  cout << endl;
+  for (int i = 0; i < endNum.size(); i++) {
+    cout << endNum[i];
   }
   cout << endl;
 
