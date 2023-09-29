@@ -3,21 +3,22 @@
 #include <vector>
 
 using namespace std;
+typedef long long ll;
 
 struct move {
-  int base;
+  ll base;
   char type;
 };
 
-int y;
+ll y;
 
 void printMove(struct move m) { cout << m.base << " " << m.type << endl; }
 
-bool calculateDance(vector<struct move> &moves, int threshold) {
-  int scoreCount = 0;
+bool calculateDance(vector<struct move> &moves, ll threshold) {
+  ll scoreCount = 0;
   bool meyakinkan = false;
-  for (int i = 0; i < moves.size(); i++) {
-    int base = moves[i].base;
+  for (ll i = 0; i < moves.size(); i++) {
+    ll base = moves[i].base;
     // cout << "base prev " << base << endl;
     if (i >= 0) {
       if (moves[i - 1].type == 'P')
@@ -37,13 +38,13 @@ bool calculateDance(vector<struct move> &moves, int threshold) {
   return scoreCount > threshold;
 }
 
-int permute(vector<struct move> &moves, int r, int standard, int used,
-            vector<struct move> &currentMoves, int currentN) {
+ll permute(vector<struct move> &moves, ll r, ll standard, ll used,
+           vector<struct move> &currentMoves, ll currentN) {
   if (currentN > r) {
     return calculateDance(currentMoves, standard);
   }
-  int count = 0;
-  for (int i = 0; i < moves.size(); i++) {
+  ll count = 0;
+  for (ll i = 0; i < moves.size(); i++) {
     if (0 == (used & (1 << i))) {
       currentMoves[currentN - 1] = moves[i];
       count += permute(moves, r, standard, used | (1 << i), currentMoves,
@@ -54,23 +55,23 @@ int permute(vector<struct move> &moves, int r, int standard, int used,
   return count;
 }
 
-int main() {
+signed main() {
   string subquestion;
-  int subNumb;
+  ll subNumb;
   cin >> subquestion >> subNumb;
 
-  int n, r, j;
+  ll n, r, j;
   cin >> n >> r >> y >> j;
   vector<struct move> moves(n);
-  for (int i = 0; i < n; i++) {
+  for (ll i = 0; i < n; i++) {
     cin >> moves[i].base >> moves[i].type;
   }
 
   vector<struct move> current(n);
-  for (int i = 0; i < j; i++) {
-    int threshold;
+  for (ll i = 0; i < j; i++) {
+    ll threshold;
     cin >> threshold;
-    int res = permute(moves, r, threshold, 0, current, 1);
+    ll res = permute(moves, r, threshold, 0, current, 1);
     cout << res << endl;
   }
 
