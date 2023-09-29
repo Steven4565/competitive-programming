@@ -32,6 +32,11 @@ int main() {
   counts[prices[0].first] = m / leastPrice;
   ll maxPlates = m / leastPrice;
 
+  // TODO: Another edge case, if the leastPrice is plate 0, then get the other
+  // lowest plate to maximize the 0 if (prices[0].first == 0) {
+
+  // }
+
   ll remainder = m % leastPrice;
   // cout << "rem " << remainder << endl;
   for (int i = n - 1; i >= 0 && remainder > 0 && maxPlates > 0; i--) {
@@ -74,15 +79,27 @@ int main() {
     return 0;
   } else {
     int plateNum = n - 1;
+    // FIXME: This is O(n), fix this.
     for (int i = maxPlates; i >= 0 && plateNum >= 0; i--) {
       if (counts[plateNum] > 0) {
+        bool startPush = false, endPush = false;
         if (startNum.size() < 50) {
           startNum.push_back('0' + plateNum);
+          startPush = true;
           // cout << "num" << plateNum << endl;
         }
-        if (i <= 50)
+        if (i <= 50) {
           endNum.push_back('0' + plateNum);
-        counts[plateNum]--;
+          endPush = true;
+        }
+
+        if (!endPush && !startPush) {
+          cout << "i bef " << i << endl;
+          i -= counts[plateNum] - 1;
+          cout << "i after " << i << endl;
+          counts[plateNum] = 0;
+        } else
+          counts[plateNum]--;
       }
       while (counts[plateNum] == 0) {
         plateNum--;
